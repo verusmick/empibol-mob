@@ -1,7 +1,9 @@
 import React from 'react';
 import { createSwitchNavigator } from 'react-navigation';
-import { HomeView } from '../Home/HomeView';
 
+import { CheckInView } from '../checkIn/CheckInView';
+import { CheckOutView } from '../checkOut/CheckOutView';
+import { HomeView } from '../home/HomeView';
 import { LoginView } from '../login/LoginView';
 
 
@@ -11,7 +13,15 @@ export const AppNavigator = createSwitchNavigator({
     },
     Home: {
         screen: HomeView
+    },
+    CheckIn: {
+        screen: CheckInView
+    },
+    CheckOut: {
+        screen: CheckOutView
     }
 }, {
     initialRouteName: 'Login'
 })
+
+

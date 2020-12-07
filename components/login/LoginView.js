@@ -1,16 +1,25 @@
 import React, { useState } from 'react'
 import { Alert, Button, Image, StyleSheet, TextInput, View } from 'react-native'
+import { fetchWithoutToken } from '../../utils/fetch';
 
-export const LoginView = ({navigation}) => {
-    const [state, setState] = useState({
-        username: '',
+export const LoginView = ({ navigation }) => {
+    const [loginForm, setLoginForm] = useState({
+        ci: '',
         password: '',
     })
+    
+    const { ci, password } = loginForm;
 
-    const onLogin = () => {
-        const { username, password } = state;
-        Alert.alert('Credentials', `${username} + ${password}`);
+    const handleLogin = async (e) => {
+        const resp = await fetchWithoutToken(`auth`, { ci, password }, 'POST');
+        const body = await resp.json();
+        if (body.ok) {
+            navigation.navigate('Home');
+        } else {
+            alert(body.msg)
+        }
     }
+
     return (
         <View style={styles.container}>
             <Image
@@ -18,14 +27,15 @@ export const LoginView = ({navigation}) => {
                 style={styles.logo}
             />
             <TextInput
-                value={state.username}
-                onChangeText={(username) => setState({ username })}
-                placeholder={'Username'}
+                value={ci}
+                ty
+                onChangeText={(ci) => setLoginForm({ ...loginForm, ci: ci })}
+                placeholder={'CI del Usuario'}
                 style={styles.input}
             />
             <TextInput
-                value={state.password}
-                onChangeText={(password) => setState({ password })}
+                value={password}
+                onChangeText={(password) => setLoginForm({ ...loginForm, password: password })}
                 placeholder={'Password'}
                 secureTextEntry={true}
                 style={styles.input}
@@ -34,7 +44,7 @@ export const LoginView = ({navigation}) => {
             <Button
                 title={'Login'}
                 style={styles.input}
-                onPress={() => navigation.navigate('Home')}
+                onPress={handleLogin}
             />
         </View>
     )
@@ -44,8 +54,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'center',
-        // backgroundColor: '#ecf0f1',
+        justifyContent: 'center'
     },
     logo: {
         height: 150,
