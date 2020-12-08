@@ -1,19 +1,21 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useState } from 'react'
 import { Alert, Button, Image, StyleSheet, TextInput, View } from 'react-native'
 import { fetchWithoutToken } from '../../utils/fetch';
 
 export const LoginView = ({ navigation }) => {
     const [loginForm, setLoginForm] = useState({
-        ci: '',
-        password: '',
+        ci: '7029468',
+        password: 'control123',
     })
-    
+
     const { ci, password } = loginForm;
 
     const handleLogin = async (e) => {
         const resp = await fetchWithoutToken(`auth`, { ci, password }, 'POST');
         const body = await resp.json();
         if (body.ok) {
+            await AsyncStorage.setItem('@uid', body.uid);
             navigation.navigate('Home');
         } else {
             alert(body.msg)
